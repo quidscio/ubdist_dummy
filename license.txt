@@ -18,7 +18,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 All files in this folder and subfolders, unless explicitly stated otherwise or copyrighted by other authors, are copyrighted by Soaring Distributions LLC as described above.
 
 
-Any files that may be regarded as part of any separate 'ubdist-dummy' project or similar project are a derivative project of ubDistBuild inheriting the same licensing terms, with the same implied if not stated exception that this license only applies to files of that or those such projects, and not to files merely generated as output of these projects, excepting the inclusion of licensed project files remaining under the license. The creation of a 'fork' of the 'ubDistBuild' project with a new directory name (eg. 'ubdist-dummy') does not necessarily constitute any implied or otherwise reassignment or relicensing. 
+Any files that may be regarded as part of any separate 'ubdist_dummy' project or similar project are a derivative project of ubDistBuild inheriting the same licensing terms, with the same implied if not stated exception that this license only applies to files of that or those such projects, and not to files merely generated as output of these projects, excepting the inclusion of licensed project files remaining under the license. The creation of a 'fork' of the 'ubDistBuild' project with a new directory name (eg. 'ubdist-dummy') does not necessarily constitute any implied or otherwise reassignment or relicensing. 
 
 
 Such legal statements as the following remain in effect in full and do apply:
