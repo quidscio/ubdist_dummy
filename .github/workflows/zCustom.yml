@@ -664,11 +664,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-          
-      - name: _rotten_install-kde
-        shell: bash
-        run: |
-          ./ubiquitous_bash.sh _create_ubDistBuild-rotten_install-kde
+      # ONLY enable if a replacement '_lib/custom/package_kde.tar.xz' is available and desired. This WILL fail if the file is not present, and this is NOT necessary unless a different customization is needed: it is better to rely on the upstream 'ubDistBuild' repository KDE configuration package installed for 'ubdist/OS' .
+      #- name: _rotten_install-kde
+        #shell: bash
+        #run: |
+          #./ubiquitous_bash.sh _create_ubDistBuild-rotten_install-kde
 
 
       #- name: zSpecial_report-delete
@@ -681,11 +681,11 @@ jobs:
           #./ubiquitous_bash.sh _chroot rm -f /cfgFW.log
           #./ubiquitous_bash.sh _chroot rm -f /FW-done
 
-      - name: _zSpecial_report
+      - name: _zSpecial_report-FORCE
         shell: bash
         continue-on-error: true
         run: |
-          ./ubiquitous_bash.sh _zSpecial_report
+          ./ubiquitous_bash.sh _zSpecial_report-FORCE
           ls -l ./_local/grub.cfg
           ls -l ./_local/grubenv
           ls -l ./_local/dpkg
