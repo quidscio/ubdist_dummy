@@ -59,11 +59,11 @@ _get_vmImg_ubDistBuild_sequence() {
 	local currentExitStatus
 	if [[ "$3" == "" ]] # || [[ "$FORCE_AXEL" != "" ]]
 	then
-		_wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "package_image.tar.flx" | _get_extract_ubDistBuild-tar xv --overwrite
+		_wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "package_image.tar.flx" | _get_extract_ubDistBuild-tar xv --overwrite
 		currentExitStatus="$?"
 	else
-		#_wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "package_image.tar.flx" | _get_extract_ubDistBuild-tar --extract vm.img --to-stdout | _dd of="$3" bs=1M
-		_wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "package_image.tar.flx" | _get_extract_ubDistBuild-tar --extract ./vm.img --to-stdout | sudo -n dd of="$3" bs=1M status=progress
+		#_wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "package_image.tar.flx" | _get_extract_ubDistBuild-tar --extract vm.img --to-stdout | _dd of="$3" bs=1M
+		_wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "package_image.tar.flx" | _get_extract_ubDistBuild-tar --extract ./vm.img --to-stdout | sudo -n dd of="$3" bs=1M status=progress
 		currentExitStatus="$?"
 	fi
 	if [[ "$currentExitStatus" != "0" ]]
@@ -103,8 +103,8 @@ _get_vmImg_ubDistBuild_sequence() {
 	fi
 	if [[ "$currentHash" == "" ]] || [[ "$currentHash_bytes" == "" ]]
 	then
-		currentHash=$(_wget_githubRelease-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 3 | tail -n 1)
-		currentHash_bytes=$(_wget_githubRelease-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 2 | tail -n 1 | sed 's/^.*count=$(bc <<< '"'"'//' | cut -f1 -d\  )
+		currentHash=$(_wget_githubRelease-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 3 | tail -n 1)
+		currentHash_bytes=$(_wget_githubRelease-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 2 | tail -n 1 | sed 's/^.*count=$(bc <<< '"'"'//' | cut -f1 -d\  )
 	fi
 	( [[ "$currentHash" == "" ]] || [[ "$currentHash_bytes" == "" ]] ) && _messageFAIL
 	export MANDATORY_HASH=
@@ -160,10 +160,10 @@ _get_vmImg_ubDistBuild-live_sequence() {
 	export MANDATORY_HASH="true"
 	if [[ "$3" == "" ]] # || [[ "$FORCE_AXEL" != "" ]]
 	then
-		_wget_githubRelease_join "soaringDistributions/ubdist-dummy" "$releaseLabel" "vm-live.iso"
+		_wget_githubRelease_join "soaringDistributions/ubdist_dummy" "$releaseLabel" "vm-live.iso"
 		currentExitStatus="$?"
 	else
-		currentHash_bytes=$(_wget_githubRelease-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 14 | tail -n 1 | sed 's/^.*count=$(bc <<< '"'"'//' | cut -f1 -d\  )
+		currentHash_bytes=$(_wget_githubRelease-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 14 | tail -n 1 | sed 's/^.*count=$(bc <<< '"'"'//' | cut -f1 -d\  )
 		
 		if ! [[ $(df --block-size=1000000 --output=avail "$tmpSelf" | tr -dc '0-9') -gt "3880" ]]
 		then
@@ -183,33 +183,33 @@ _get_vmImg_ubDistBuild-live_sequence() {
 		#sudo -n dvd+rw-format -ssa=256m "$3"
 		#sudo -n dvd+rw-format -ssa=none "$3"
 		
-		#_wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "vm-live.iso" | sudo -n wodim -v -sao dev="$3" tsize="$currentHash_bytes" -waiti -
+		#_wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "vm-live.iso" | sudo -n wodim -v -sao dev="$3" tsize="$currentHash_bytes" -waiti -
 		#-speed=256
 		#-dvd-compat
 		#-overburn
 		#-use-the-force-luke=bufsize:2560m
 		#pv -pterbTCB 1G
-		#_wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "vm-live.iso" | sudo -n growisofs -speed=256 -dvd-compat -Z "$3"=/dev/stdin -use-the-force-luke=notray
+		#_wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "vm-live.iso" | sudo -n growisofs -speed=256 -dvd-compat -Z "$3"=/dev/stdin -use-the-force-luke=notray
 		
 		
 		
 		
 		
-		( _wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "vm-live.iso" | tee >(openssl dgst -whirlpool -binary | xxd -p -c 256 >> "$scriptLocal"/hash-download.txt) ; dd if=/dev/zero bs=2048 count=$(bc <<< '1000000000000 / 2048' ) ) | sudo -n growisofs -speed=2 -dvd-compat -Z "$3"=/dev/stdin -use-the-force-luke=notray -use-the-force-luke=spare:min -use-the-force-luke=bufsize:128m
+		( _wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "vm-live.iso" | tee >(openssl dgst -whirlpool -binary | xxd -p -c 256 >> "$scriptLocal"/hash-download.txt) ; dd if=/dev/zero bs=2048 count=$(bc <<< '1000000000000 / 2048' ) ) | sudo -n growisofs -speed=2 -dvd-compat -Z "$3"=/dev/stdin -use-the-force-luke=notray -use-the-force-luke=spare:min -use-the-force-luke=bufsize:128m
 		currentExitStatus="$?"
 		
 		
 		
 		# May be untested.
 		# Theoretically, wodim may be usable with Cygwin/MSW . Unfortunately, defect management may not be available. In any case, 'growisofs' is definitely preferable whenever possible.
-		#( _wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "vm-live.iso" | tee >(openssl dgst -whirlpool -binary | xxd -p -c 256 >> "$scriptLocal"/hash-download.txt) ; dd if=/dev/zero bs=2048 count=$(bc <<< '0 / 2048' ) ) | sudo -n wodim -v -sao fs=128m dev="$3" blank=session tsize="$currentHash_bytes" /dev/stdin
+		#( _wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "vm-live.iso" | tee >(openssl dgst -whirlpool -binary | xxd -p -c 256 >> "$scriptLocal"/hash-download.txt) ; dd if=/dev/zero bs=2048 count=$(bc <<< '0 / 2048' ) ) | sudo -n wodim -v -sao fs=128m dev="$3" blank=session tsize="$currentHash_bytes" /dev/stdin
 		#currentExitStatus="$?"
 		
 		
 		
 		
 		
-		#_wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "vm-live.iso" | cat > /dev/null
+		#_wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "vm-live.iso" | cat > /dev/null
 		#currentExitStatus="$?"
 		
 		
@@ -239,8 +239,8 @@ _get_vmImg_ubDistBuild-live_sequence() {
 	fi
 	if [[ "$currentHash" == "" ]] || [[ "$currentHash_bytes" == "" ]]
 	then
-		currentHash=$(_wget_githubRelease-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 15 | tail -n 1)
-		currentHash_bytes=$(_wget_githubRelease-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 14 | tail -n 1 | sed 's/^.*count=$(bc <<< '"'"'//' | cut -f1 -d\  )
+		currentHash=$(_wget_githubRelease-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 15 | tail -n 1)
+		currentHash_bytes=$(_wget_githubRelease-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 14 | tail -n 1 | sed 's/^.*count=$(bc <<< '"'"'//' | cut -f1 -d\  )
 	fi
 	( [[ "$currentHash" == "" ]] || [[ "$currentHash_bytes" == "" ]] ) && _messageFAIL
 	export MANDATORY_HASH=
@@ -291,7 +291,7 @@ _get_vmImg_ubDistBuild-rootfs_sequence() {
 	mkdir -p "$scriptLocal"
 	cd "$scriptLocal"
 	export MANDATORY_HASH="true"
-	_wget_githubRelease_join-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "package_rootfs.tar.flx" | lz4 -d -c > ./package_rootfs.tar
+	_wget_githubRelease_join-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "package_rootfs.tar.flx" | lz4 -d -c > ./package_rootfs.tar
 	[[ "$?" != "0" ]] && _messageFAIL
 	export MANDATORY_HASH=
 	unset MANDATORY_HASH
@@ -307,7 +307,7 @@ _get_vmImg_ubDistBuild-rootfs_sequence() {
 	export MANDATORY_HASH=
 	unset MANDATORY_HASH
 	[[ "$2" != "" ]] && currentHash="$2"
-	[[ "$2" == "" ]] && currentHash=$(_wget_githubRelease-stdout "soaringDistributions/ubdist-dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 9 | tail -n 1)
+	[[ "$2" == "" ]] && currentHash=$(_wget_githubRelease-stdout "soaringDistributions/ubdist_dummy" "$releaseLabel" "_hash-ubdist.txt" | head -n 9 | tail -n 1)
 	export MANDATORY_HASH=
 	unset MANDATORY_HASH
 
