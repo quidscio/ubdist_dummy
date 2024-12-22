@@ -1,4 +1,7 @@
 _custom() {
+	! _openChRoot && _messagePlain_bad 'fail: openChroot' && _messageFAIL
+	
+	
 	_messageNormal '***** ***** ***** ***** ***** custom: researchEngine'
 	
 	_chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _setup_researchEngine'
@@ -8,6 +11,8 @@ _custom() {
 
 	_chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt'
 
+
+	! _closeChRoot && _messagePlain_bad 'fail: closeChroot' && _messageFAIL
 }
 
 _custom-expand() {
