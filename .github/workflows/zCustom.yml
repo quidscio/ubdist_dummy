@@ -54,6 +54,9 @@ on:
       qemuNoKVM:
         type: boolean
         default: true
+      DISABLE_BOOT:
+        type: boolean
+        default: true
       runnerName:
         required: false
         default: ubuntu-latest-m
@@ -102,6 +105,7 @@ jobs:
 
 
   build_before_noBoot:
+    if: ${{ github.event.inputs.DISABLE_BOOT != 'true' }}
     needs: [build_release]
     #runs-on: ${{ github.event.inputs.runnerName == '' && 'ubuntu-latest-m' || github.event.inputs.runnerName }}
     runs-on: ubuntu-latest
@@ -593,6 +597,7 @@ jobs:
       
       
       - name: _get_vmImg_ubDistBuild_before_noBoot
+        if: ${{ github.event.inputs.DISABLE_BOOT != 'true' }}
         shell: bash
         run: |
           #export FORCE_AXEL=8
@@ -605,6 +610,27 @@ jobs:
           ../ubiquitous_bash.sh _wget_githubRelease_join-stdout "${{ github.repository }}" "" "package_image_before_noBoot.tar.flx" 2> /dev/null | tee >(../ubiquitous_bash.sh _get_extract_ubDistBuild-tar --extract ./vm.img --to-stdout | env OPENSSL_CONF="/etc/ssl/openssl_legacy.cnf" openssl dgst -whirlpool -binary | xxd -p -c 256 > hash-download.txt) | ../ubiquitous_bash.sh _get_extract_ubDistBuild
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      - name: _get_vmImg_ubDistBuild
+        if: ${{ github.event.inputs.DISABLE_BOOT == 'true' }}
+        shell: bash
+        run: |
+          current_releaseLabel="${{ inputs.releaseLabel }}"
+          #[[ "$current_releaseLabel" == "" ]] && current_releaseLabel="base"
+          [[ "$current_releaseLabel" == "" ]] && current_releaseLabel="latest"
+          [[ "$current_releaseLabel" == "latest" ]] && current_releaseLabel=""
+          #export FORCE_AXEL=8
+          #./ubiquitous_bash.sh _get_vmImg_ubDistBuild "latest"
+          # DANGER: Github Actions (strictly internal) ONLY!
+          export FORCE_AXEL=8
+          export MANDATORY_HASH="true"
+          cd ./_local
+          rm -f hash-download.txt
+          ../ubiquitous_bash.sh _wget_githubRelease_join-stdout "soaringDistributions/ubDistBuild" "$current_releaseLabel" "package_image.tar.flx" 2> /dev/null | tee >(../ubiquitous_bash.sh _get_extract_ubDistBuild-tar --extract ./vm.img --to-stdout | env OPENSSL_CONF="/etc/ssl/openssl_legacy.cnf" openssl dgst -whirlpool -binary | xxd -p -c 256 > hash-download.txt) | ../ubiquitous_bash.sh _get_extract_ubDistBuild
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       
       - name: _hash_img
         shell: bash
@@ -669,17 +695,6 @@ jobs:
         #shell: bash
         #run: |
           #./ubiquitous_bash.sh _create_ubDistBuild-rotten_install-kde
-
-
-      #- name: zSpecial_report-delete
-        #shell: bash
-        #run: |
-          #./ubiquitous_bash.sh _chroot rm -f /dpkg
-          #./ubiquitous_bash.sh _chroot rm -f /lsmodReport
-          #./ubiquitous_bash.sh _chroot rm -f /binReport
-          #./ubiquitous_bash.sh _chroot rm -f /coreReport
-          #./ubiquitous_bash.sh _chroot rm -f /cfgFW.log
-          #./ubiquitous_bash.sh _chroot rm -f /FW-done
 
       - name: _zSpecial_report-FORCE
         shell: bash
@@ -801,6 +816,15 @@ jobs:
           gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part14 --yes || true
           gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part15 --yes || true
           gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part16 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part17 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part18 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part19 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part20 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part21 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part22 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part23 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part24 --yes || true
+          gh release delete-asset build-${{ github.run_id }}-${{ github.run_attempt }} package_image_before_noBoot.tar.flx.part25 --yes || true
           true
         env:
           GH_TOKEN: ${{ github.token }}
@@ -1540,13 +1564,13 @@ jobs:
           cd ./_local/analysis
 
           # Get the list of releases
-          RELEASES=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/soaringDistributions/ubDistBuild/releases)
+          RELEASES=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/"${{ github.repository }}"/releases)
 
           # Download binReport file for the current release
-          curl -s -H "Authorization: token $GH_TOKEN" -L -o "lsmodReport-$currentReleaseTag" "https://github.com/soaringDistributions/ubDistBuild/releases/download/$currentReleaseTag/lsmodReport"
-          curl -s -H "Authorization: token $GH_TOKEN" -L -o "binReport-$currentReleaseTag" "https://github.com/soaringDistributions/ubDistBuild/releases/download/$currentReleaseTag/binReport"
-          curl -s -H "Authorization: token $GH_TOKEN" -L -o "coreReport-$currentReleaseTag" "https://github.com/soaringDistributions/ubDistBuild/releases/download/$currentReleaseTag/coreReport"
-          curl -s -H "Authorization: token $GH_TOKEN" -L -o "dpkg-$currentReleaseTag" "https://github.com/soaringDistributions/ubDistBuild/releases/download/$currentReleaseTag/dpkg"
+          curl -s -H "Authorization: token $GH_TOKEN" -L -o "lsmodReport-$currentReleaseTag" "https://github.com/"${{ github.repository }}"/releases/download/$currentReleaseTag/lsmodReport"
+          curl -s -H "Authorization: token $GH_TOKEN" -L -o "binReport-$currentReleaseTag" "https://github.com/"${{ github.repository }}"/releases/download/$currentReleaseTag/binReport"
+          curl -s -H "Authorization: token $GH_TOKEN" -L -o "coreReport-$currentReleaseTag" "https://github.com/"${{ github.repository }}"/releases/download/$currentReleaseTag/coreReport"
+          curl -s -H "Authorization: token $GH_TOKEN" -L -o "dpkg-$currentReleaseTag" "https://github.com/"${{ github.repository }}"/releases/download/$currentReleaseTag/dpkg"
 
           # Loop through each release
           for RELEASE in $(echo "$RELEASES" | jq -r '.[].tag_name' | sort --reverse); do
@@ -1555,10 +1579,10 @@ jobs:
             if [ "$RELEASE" != "$currentReleaseTag" ]; then
               
               # Download the binReport file for this release
-              curl -s -H "Authorization: token $GH_TOKEN" -L -o "lsmodReport-$RELEASE" "https://github.com/soaringDistributions/ubDistBuild/releases/download/$RELEASE/lsmodReport"
-              curl -s -H "Authorization: token $GH_TOKEN" -L -o "binReport-$RELEASE" "https://github.com/soaringDistributions/ubDistBuild/releases/download/$RELEASE/binReport"
-              curl -s -H "Authorization: token $GH_TOKEN" -L -o "coreReport-$RELEASE" "https://github.com/soaringDistributions/ubDistBuild/releases/download/$RELEASE/coreReport"
-              curl -s -H "Authorization: token $GH_TOKEN" -L -o "dpkg-$RELEASE" "https://github.com/soaringDistributions/ubDistBuild/releases/download/$RELEASE/dpkg"
+              curl -s -H "Authorization: token $GH_TOKEN" -L -o "lsmodReport-$RELEASE" "https://github.com/"${{ github.repository }}"/releases/download/$RELEASE/lsmodReport"
+              curl -s -H "Authorization: token $GH_TOKEN" -L -o "binReport-$RELEASE" "https://github.com/"${{ github.repository }}"/releases/download/$RELEASE/binReport"
+              curl -s -H "Authorization: token $GH_TOKEN" -L -o "coreReport-$RELEASE" "https://github.com/"${{ github.repository }}"/releases/download/$RELEASE/coreReport"
+              curl -s -H "Authorization: token $GH_TOKEN" -L -o "dpkg-$RELEASE" "https://github.com/"${{ github.repository }}"/releases/download/$RELEASE/dpkg"
               
               echo | tee -a ./missing-lsmodReport
               echo "Binaries (lsmod) loaded in $RELEASE but not in currentRelease $currentReleaseTag:" | tee -a ./missing-lsmodReport
