@@ -1,5 +1,13 @@
 _custom() {
-	true
+	_messageNormal '***** ***** ***** ***** ***** custom: researchEngine'
+	
+	_chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _setup_researchEngine'
+	
+	
+	_messageNormal '***** ***** ***** ***** ***** custom: iconArt'
+
+	_chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt'
+
 }
 
 _custom-expand() {
