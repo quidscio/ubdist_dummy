@@ -17,7 +17,7 @@ _custom-expand() {
 	_messageNormal '_custom-expand: dd'
 
 	# ATTENTION: Expand ONLY the additional amount needed for custom additions . This is APPENDED .
-	! dd if=/dev/zero bs=1M count=1000 >> "$scriptLocal"/vm.img && _messageFAIL
+	! dd if=/dev/zero bs=1M count=15000 >> "$scriptLocal"/vm.img && _messageFAIL
 
 	# Alternatively, it may be possible, but STRONGLY DISCOURAGED, to pad the file to a size. This, however, assumes the upstream 'ubdist/OS', etc, has not unexpectedly grown larger, which is still a VERY BAD assumption.
 	# https://unix.stackexchange.com/questions/196715/how-to-pad-a-file-to-a-desired-size
