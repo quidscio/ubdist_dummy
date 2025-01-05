@@ -4,7 +4,7 @@ _custom() {
 	
 	_messageNormal '***** ***** ***** ***** ***** custom: researchEngine'
 	
-	_chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; ./ubiquitous_bash.sh _gitBest pull ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _setup_researchEngine'
+	_chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _setup_researchEngine'
 	
 	
 	_messageNormal '***** ***** ***** ***** ***** custom: iconArt'
