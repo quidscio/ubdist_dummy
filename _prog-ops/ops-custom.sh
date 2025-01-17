@@ -13,6 +13,36 @@ _custom() {
 
 
 	! _closeChRoot && _messagePlain_bad 'fail: closeChroot' && _messageFAIL
+
+
+		
+	echo '###################################################################################################'
+	echo '###################################################################################################'
+	echo '###################################################################################################'
+	
+	! _openChRoot && _messagePlain_bad 'fail: openChroot' && _messageFAIL
+
+	sudo -n cp -a -f /home/user/core/installations/pumpCompanion.exe "$globalVirtFS"/home/user/core/installations/
+	_wget_githubRelease "mirage335-gizmos/pumpCompanion" "internal" "pumpCompanion.exe"
+	[[ $(wc -c pumpCompanion.exe | cut -f1 -d\  | tr -dc '0-9') -lt 1000000 ]] && rm -f pumpCompanion.exe
+	sudo -n mv -f pumpCompanion.exe "$globalVirtFS"/home/user/core/installations/
+	
+	sudo -n cp -a -f /home/user/core/installations/extIface.exe "$globalVirtFS"/home/user/core/installations/
+	_wget_githubRelease "mirage335-colossus/extendedInterface" "internal" "extIface.exe"
+	[[ $(wc -c extIface.exe | cut -f1 -d\  | tr -dc '0-9') -lt 1000000 ]] && rm -f extIface.exe
+	sudo -n mv -f extIface.exe "$globalVirtFS"/home/user/core/installations/
+	
+	sudo -n cp -a -f /home/user/core/installations/ubDistBuild.exe "$globalVirtFS"/home/user/core/installations/
+	_wget_githubRelease "soaringDistributions/ubDistBuild" "internal" "ubDistBuild.exe"
+	[[ $(wc -c ubDistBuild.exe | cut -f1 -d\  | tr -dc '0-9') -lt 1000000 ]] && rm -f ubDistBuild.exe
+	sudo -n mv -f ubDistBuild.exe "$globalVirtFS"/home/user/core/installations/
+	
+	! _closeChRoot && _messagePlain_bad 'fail: closeChroot' && _messageFAIL
+	
+	echo '###################################################################################################'
+	echo '###################################################################################################'
+	echo '###################################################################################################'
+	
 }
 
 _custom-expand() {
@@ -22,7 +52,8 @@ _custom-expand() {
 	_messageNormal '_custom-expand: dd'
 
 	# ATTENTION: Expand ONLY the additional amount needed for custom additions . This is APPENDED .
-	! dd if=/dev/zero bs=1M count=25000 >> "$scriptLocal"/vm.img && _messageFAIL
+	#! dd if=/dev/zero bs=1M count=25000 >> "$scriptLocal"/vm.img && _messageFAIL
+	! dd if=/dev/zero bs=1M count=30000 >> "$scriptLocal"/vm.img && _messageFAIL
 
 	# Alternatively, it may be possible, but STRONGLY DISCOURAGED, to pad the file to a size. This, however, assumes the upstream 'ubdist/OS', etc, has not unexpectedly grown larger, which is still a VERY BAD assumption.
 	# https://unix.stackexchange.com/questions/196715/how-to-pad-a-file-to-a-desired-size
