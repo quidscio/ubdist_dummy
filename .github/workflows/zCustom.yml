@@ -109,6 +109,29 @@ jobs:
   build_release:
     runs-on: ubuntu-latest
     steps:
+      - name: report! custom! options
+        shell: bash
+        run: |
+          echo releaseOrigin ${{ github.event.inputs.releaseOrigin }}
+          echo releaseLabel ${{ github.event.inputs.releaseLabel }}
+          echo customTimeout ${{ github.event.inputs.customTimeout }}
+          echo DANGERfast_EXPERIMENT ${{ github.event.inputs.DANGERfast_EXPERIMENT }}
+          echo DISABLE_RELEASE ${{ github.event.inputs.DISABLE_RELEASE }}
+          echo DISABLE_ROOTFS ${{ github.event.inputs.DISABLE_ROOTFS }}
+          echo skimfast ${{ github.event.inputs.skimfast }}
+          echo qemuNoKVM ${{ github.event.inputs.qemuNoKVM }}
+          echo DISABLE_BOOT ${{ github.event.inputs.DISABLE_BOOT }}
+          echo runnerName ${{ github.event.inputs.runnerName }}
+      - name: check! valid! inputs
+        if : ( ${{ github.event.inputs.runnerName != 'ubuntu-latest-l' }} && ${{ github.event.inputs.runnerName != 'ubuntu-latest-m' }} ) && ( ${{ github.event.inputs.qemuNoKVM == false }} )
+        shell: bash
+        run: |
+          echo FAIL: invalid inputs!
+      - name: check! valid! inputs
+        if : ( ${{ github.event.inputs.runnerName == 'ubuntu-latest-l' }} || ${{ github.event.inputs.runnerName == 'ubuntu-latest-m' }} ) && ( ${{ github.event.inputs.qemuNoKVM == true }} )
+        shell: bash
+        run: |
+          echo FAIL: SLOW inputs!
       #- name: report! API Rate Limit
         #shell: bash
         #run: |
@@ -134,9 +157,10 @@ jobs:
 
 
   build_before_noBoot:
+    #if: ${{ github.event.inputs.DISABLE_BOOT != 'true' }}
     needs: [build_release]
-    #runs-on: ${{ github.event.inputs.runnerName == '' && 'ubuntu-latest-m' || github.event.inputs.runnerName }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.runnerName == '' && 'ubuntu-latest-m' || github.event.inputs.runnerName }}
+    #runs-on: ubuntu-latest
     steps:
       - name: RAND_SEED
         shell: bash
@@ -202,7 +226,7 @@ jobs:
           sudo -n udevadm control --reload-rules
           sudo -n udevadm trigger --name-match=kvm
           sudo -n apt-get update
-          sudo -n apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu qemu-system-x86
+          sudo -n apt-get install -y libvirt-clients libvirt-daemon-system libvirt-daemon virtinst bridge-utils qemu-user qemu-utils qemu-system-x86
           sudo -n usermod -a -G kvm $USER
           sudo -n usermod -a -G libvirt $USER
           sudo -n usermod -a -G docker $USER
@@ -572,6 +596,7 @@ jobs:
   build:
     needs: [build_before_noBoot, build_release]
     runs-on: ${{ github.event.inputs.runnerName == '' && 'ubuntu-latest-m' || github.event.inputs.runnerName }}
+    #runs-on: 'ubuntu-latest'
     steps:
       - name: RAND_SEED
         shell: bash
@@ -669,6 +694,10 @@ jobs:
               exit ${PIPESTATUS[0]}
           fi
       
+      - name: mkdir _local
+        shell: bash
+        run: |
+          mkdir -p ./_local
       
       - name: _get_vmImg_ubDistBuild_before_noBoot
         if: ${{ github.event.inputs.DISABLE_BOOT != 'true' }}
@@ -1002,7 +1031,7 @@ jobs:
   build-convert-rootfs:
     if : ${{ github.event.inputs.DISABLE_RELEASE == 'false' }}
     needs: [build, build_release]
-    runs-on: ${{ github.event.inputs.DISABLE_ROOTFS != 'false' && 'ubuntu-latest' || github.event.inputs.runnerName == '' && 'ubuntu-latest-m' || github.event.inputs.runnerName }}
+    runs-on: ${{ github.event.inputs.DISABLE_ROOTFS == 'true' && 'ubuntu-latest' || github.event.inputs.runnerName == '' && 'ubuntu-latest-m' || github.event.inputs.runnerName }}
     steps:
       - name: RAND_SEED
         shell: bash
@@ -1625,7 +1654,7 @@ jobs:
           cat ./_local/_hash-ubdist.txt
 
       - name: artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: _hash-ubdist.txt
           path: |
