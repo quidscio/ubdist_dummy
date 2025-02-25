@@ -7,12 +7,13 @@ _custom() {
 	
 	_messageNormal '***** ***** ***** ***** ***** custom: researchEngine'
 	
-	_chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _setup_researchEngine'
+	! _chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _setup_researchEngine' && _messageFAIL
+	_chroot /bin/bash -c '[ -e "'"/home/user/core/data/searxng/settings.yml.rej"'" ]' && _messageFAIL
 	
 	
 	_messageNormal '***** ***** ***** ***** ***** custom: iconArt'
 
-	_chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt'
+	! _chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt' && _messageFAIL
 
 
 	! _closeChRoot && _messagePlain_bad 'fail: closeChroot' && _messageFAIL
@@ -56,7 +57,8 @@ _custom-expand() {
 
 	# ATTENTION: Expand ONLY the additional amount needed for custom additions . This is APPENDED .
 	#! dd if=/dev/zero bs=1M count=25000 >> "$scriptLocal"/vm.img && _messageFAIL
-	! dd if=/dev/zero bs=1M count=30000 >> "$scriptLocal"/vm.img && _messageFAIL
+	#! dd if=/dev/zero bs=1M count=30000 >> "$scriptLocal"/vm.img && _messageFAIL
+	! dd if=/dev/zero bs=1M count=40000 >> "$scriptLocal"/vm.img && _messageFAIL
 
 	# Alternatively, it may be possible, but STRONGLY DISCOURAGED, to pad the file to a size. This, however, assumes the upstream 'ubdist/OS', etc, has not unexpectedly grown larger, which is still a VERY BAD assumption.
 	# https://unix.stackexchange.com/questions/196715/how-to-pad-a-file-to-a-desired-size
