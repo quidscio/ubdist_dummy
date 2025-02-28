@@ -46,8 +46,7 @@ _custom() {
 	echo '###################################################################################################'
 	echo '###################################################################################################'
 	echo '###################################################################################################'
-
-	return 0
+	
 }
 
 _custom-expand() {
@@ -99,8 +98,6 @@ _custom-repo() {
 	_messagePlain_probe _git-custom-repo variant org repo
 	
 	_messagePlain_probe _git-custom-repo variant org repo_bundle
-
-	return 0
 }
 
 
@@ -119,7 +116,5 @@ _git-custom-repo() {
 	fi
 	
 	! _closeChRoot && _messageFAIL
-
-	return 0
 }
 
