@@ -2,6 +2,11 @@
 # CAUTION: ATTENTION: Do NOT unnecessarily download infrastructure, etc, exclusively, as opposed to updating, from external sources. Changes to the underlying Debian dist/OS (eg. python2.7 'deprecation') breaks such very useful tools as gEDA - maintaining a CI pipeline originating from ubdist/OS or ubdist_dummy/OS with manually made changes to the 'disk image', offline conversion to live ISO/USB, WSL rootfs, etc, is a very important feature of ubDistBuild/ubdist/OS, which absolutely should NOT be broken.
 
 _custom() {
+
+	# ATTENTION
+	export GH_TOKEN="$GH_TOKEN_publicEquiv_auto"
+
+	
 	! _openChRoot && _messagePlain_bad 'fail: openChroot' && _messageFAIL
 	
 	
@@ -46,7 +51,8 @@ _custom() {
 	echo '###################################################################################################'
 	echo '###################################################################################################'
 	echo '###################################################################################################'
-	
+
+	return 0
 }
 
 _custom-expand() {
@@ -95,9 +101,19 @@ _custom-expand() {
 }
 
 _custom-repo() {
-	_messagePlain_probe _git-custom-repo variant org repo
+	#_git-custom-repo variant org repo
 	
-	_messagePlain_probe _git-custom-repo variant org repo_bundle
+	#_git-custom-repo variant org repo_bundle
+
+	#export GH_TOKEN="$GH_TOKEN_publicEquiv_auto"
+
+	#git-custom-repo ...
+
+	#export GH_TOKEN=...
+	
+	#git-custom-repo ...
+
+	return 0
 }
 
 
@@ -116,5 +132,7 @@ _git-custom-repo() {
 	fi
 	
 	! _closeChRoot && _messageFAIL
+
+	return 0
 }
 
