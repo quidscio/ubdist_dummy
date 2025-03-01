@@ -12,13 +12,13 @@ _custom() {
 	
 	_messageNormal '***** ***** ***** ***** ***** custom: researchEngine'
 	
-	! _chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _setup_researchEngine' && _messageFAIL
+	! _chroot sudo -n --preserve-env=GH_TOKEN --preserve-env=INPUT_GITHUB_TOKEN -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _setup_researchEngine' && _messageFAIL
 	_chroot /bin/bash -c '[ -e "'"/home/user/core/data/searxng/settings.yml.rej"'" ]' && _messageFAIL
 	
 	
 	_messageNormal '***** ***** ***** ***** ***** custom: iconArt'
 
-	! _chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt' && _messageFAIL
+	! _chroot sudo -n --preserve-env=GH_TOKEN --preserve-env=INPUT_GITHUB_TOKEN -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt' && _messageFAIL
 
 
 	! _closeChRoot && _messagePlain_bad 'fail: closeChroot' && _messageFAIL
@@ -160,13 +160,13 @@ _upgrade_custom() {
 	
 	_messageNormal '***** ***** ***** ***** ***** custom: upgrade: researchEngine'
 	
-	! _chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _upgrade_researchEngine' && _messageFAIL
+	! _chroot sudo -n --preserve-env=GH_TOKEN --preserve-env=INPUT_GITHUB_TOKEN -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _upgrade_researchEngine' && _messageFAIL
 	_chroot /bin/bash -c '[ -e "'"/home/user/core/data/searxng/settings.yml.rej"'" ]' && _messageFAIL
 	
 	
 	_messageNormal '***** ***** ***** ***** ***** custom: (upgrade): iconArt'
 
-	! _chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt' && _messageFAIL
+	! _chroot sudo -n --preserve-env=GH_TOKEN --preserve-env=INPUT_GITHUB_TOKEN -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt' && _messageFAIL
 
 
 	! _closeChRoot && _messagePlain_bad 'fail: closeChroot' && _messageFAIL
