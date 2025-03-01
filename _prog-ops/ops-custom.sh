@@ -136,3 +136,72 @@ _git-custom-repo() {
 	return 0
 }
 
+
+
+
+
+
+
+
+
+
+
+
+# ATTENTION: Nearly identical to _custom . Significant differences:
+#  _upgrade_researchEngine (instead of _setup_researchEngine)
+_upgrade_custom() {
+
+	# ATTENTION
+	export GH_TOKEN="$GH_TOKEN_publicEquiv_auto"
+
+	
+	! _openChRoot && _messagePlain_bad 'fail: openChroot' && _messageFAIL
+	
+	
+	_messageNormal '***** ***** ***** ***** ***** custom: upgrade: researchEngine'
+	
+	! _chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/ubiquitous_bash ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _gitBest submodule update --recursive ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _upgrade_researchEngine' && _messageFAIL
+	_chroot /bin/bash -c '[ -e "'"/home/user/core/data/searxng/settings.yml.rej"'" ]' && _messageFAIL
+	
+	
+	_messageNormal '***** ***** ***** ***** ***** custom: (upgrade): iconArt'
+
+	! _chroot sudo -n -u user bash -c 'cd /home/user/core/infrastructure/iconArt ; ./ubiquitous_bash.sh _gitBest pull ; chmod 755 ./ubiquitous_bash.sh ; ./ubiquitous_bash.sh _fetch_iconArt' && _messageFAIL
+
+
+	! _closeChRoot && _messagePlain_bad 'fail: closeChroot' && _messageFAIL
+
+
+		
+	echo '###################################################################################################'
+	echo '###################################################################################################'
+	echo '###################################################################################################'
+	
+	! _openChRoot && _messagePlain_bad 'fail: openChroot' && _messageFAIL
+
+	sudo -n cp -a -f /home/user/core/installations/pumpCompanion.exe "$globalVirtFS"/home/user/core/installations/
+	_wget_githubRelease "mirage335-gizmos/pumpCompanion" "internal" "pumpCompanion.exe"
+	[[ $(wc -c pumpCompanion.exe | cut -f1 -d\  | tr -dc '0-9') -lt 1000000 ]] && rm -f pumpCompanion.exe
+	sudo -n mv -f pumpCompanion.exe "$globalVirtFS"/home/user/core/installations/
+	
+	sudo -n cp -a -f /home/user/core/installations/extIface.exe "$globalVirtFS"/home/user/core/installations/
+	_wget_githubRelease "mirage335-colossus/extendedInterface" "internal" "extIface.exe"
+	[[ $(wc -c extIface.exe | cut -f1 -d\  | tr -dc '0-9') -lt 1000000 ]] && rm -f extIface.exe
+	sudo -n mv -f extIface.exe "$globalVirtFS"/home/user/core/installations/
+	
+	sudo -n cp -a -f /home/user/core/installations/ubDistBuild.exe "$globalVirtFS"/home/user/core/installations/
+	_wget_githubRelease "soaringDistributions/ubDistBuild" "internal" "ubDistBuild.exe"
+	[[ $(wc -c ubDistBuild.exe | cut -f1 -d\  | tr -dc '0-9') -lt 1000000 ]] && rm -f ubDistBuild.exe
+	sudo -n mv -f ubDistBuild.exe "$globalVirtFS"/home/user/core/installations/
+	
+	! _closeChRoot && _messagePlain_bad 'fail: closeChroot' && _messageFAIL
+	
+	echo '###################################################################################################'
+	echo '###################################################################################################'
+	echo '###################################################################################################'
+
+	return 0
+}
+
+
+
