@@ -38,11 +38,12 @@ on:
     inputs:
       releaseLabel:
         required: false
-        default: spring
+        default: build
         #default: internal
         type: choice
         options:
         - latest
+        - build
         - spring
         - internal
         - base
